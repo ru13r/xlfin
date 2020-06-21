@@ -1,3 +1,7 @@
+# IDE
+.idea/
+.vscode
+
 # Logs
 logs
 *.log
@@ -67,6 +71,9 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
+
+# Yarn lockfile
+yarn.lock
 
 # dotenv environment variables file
 .env

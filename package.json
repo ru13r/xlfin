@@ -1,0 +1,56 @@
+{
+  "name": "xlfin",
+  "description": "A Node.JS implementation of Microsoft Excel financial functions (PV, NPV, IRR, XIRR etc).",
+  "author": "Alexey Rodimov <d4rkru13r@gmail.com>",
+  "keywords": [
+    "finance",
+    "js",
+    "financial",
+    "calculator",
+		"annuity",
+		"payment",
+		"loan",
+		"bond",
+		"investment",
+    "npv",
+    "irr",
+    "excel"
+  ],
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ru13r/xlfin.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "watch": "nodemon -q --exec 'npm run lint && jest && babel-node' src/index.js",
+    "start": "babel-node src/index.js",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint \"**/*.js\" --ignore-pattern .gitignore --color"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5"
+  },
+  "engines": {
+    "node": ">=12.16.3"
+  }
+}
