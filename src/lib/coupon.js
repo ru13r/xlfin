@@ -6,7 +6,7 @@ import {
 	getDaysInYear,
 	isEOM,
 } from '@/_internal/dates';
-import { endOfMonth, splitDate } from '../_internal/dates';
+import { splitDate } from '../_internal/dates';
 
 // check valid range for frequency and basis
 // TODO move validators to a separate file
@@ -67,17 +67,21 @@ const argsValidator = (
 };
 // TODO make basis an enum
 // TODO make frequency an enum
+/*
+ * All coupon functions use basis to determine the correct day count
+ *	0 - US (NASD) 30/360 (used by default)
+ * 	1 - Actual/actual
+ * 	2 - Actual/360
+ * 	3 - Actual/365
+ * 	4 - European 30/360
+ */
+
 /**
  * Returns the number of days from the beginning of the coupon period to the settlement date
  * @param {Date} settlement 	settlement date (the date when the security is purchased)
  * @param {Date} maturity			maturity date (the date when the security expires)
  * @param {number} frequency	the number of coupon payments per year (annual = 1, semiannual = 2, quarterly = 4)
- * @param {number} [basis]		the type of day count basis to use.
- *  														0 - US (NASD) 30/360 (used by default),
- * 															1 - Actual/actual,
- * 															2 - Actual/360,
- * 															3 - Actual/365,
- * 															4 - European 30/360.
+ * @param {number} [basis]		the type of day count basis to use
  * @return {number}
  * @throws TypeError if required arguments are missing
  * @throws TypeError if settlement or maturity cannot be converted to Date
@@ -89,25 +93,6 @@ export function coupdaybs(settlement, maturity, frequency, basis = 0) {
 	argsValidator('coupdaybs', settlement, maturity, frequency, basis);
 	let pcd = couppcd(settlement, maturity, frequency, basis);
 	return daysBetween(pcd, settlement, basis);
-	// if (!basis30(basis)) {
-	// 	return daysBetween(pcd, settlement);
-	// } else {
-	// 	let eom = endOfMonth(pcd);
-	// 	if (+settlement <= +eom) {
-	// 		return daysBetween(pcd, settlement) + 1;
-	// 	}
-	// 	// todo check leap year
-	// 	// todo check if maturity is EOM
-	// 	let days =
-	// 		daysBetween(pcd, eom) - (eom.getUTCDate() > 30 ? 1 : 0);
-	// 	while (eom < settlement) {
-	// 		days = days + 30;
-	// 		eom = endOfMonth(addDate(eom, 0, 0, 1));
-	// 	}
-	// 	days =
-	// 		days - 30 + daysBetween(begOfMonth(settlement), settlement) + 1;
-	// 	return days;
-	//}
 }
 
 /**
@@ -115,12 +100,7 @@ export function coupdaybs(settlement, maturity, frequency, basis = 0) {
  * @param {Date} settlement 	settlement date (the date when the security is purchased)
  * @param {Date} maturity			maturity date (the date when the security expires)
  * @param {number} frequency	the number of coupon payments per year (annual = 1, semiannual = 2, quarterly = 4)
- * @param {number} [basis]		the type of day count basis to use.
- *  														0 - US (NASD) 30/360 (used by default)
- * 															1 - Actual/actual
- * 															2 - Actual/360
- * 															3 - Actual/365
- * 															4 - European 30/360
+ * @param {number} [basis]		the type of day count basis to use
  * @return {number}
  * @throws TypeError if required arguments are missing
  * @throws TypeError if settlement or maturity cannot be converted to Date
@@ -145,11 +125,6 @@ export function coupdays(settlement, maturity, frequency, basis = 0) {
  * @param {Date} maturity			maturity date (the date when the security expires)
  * @param {number} frequency	the number of coupon payments per year (annual = 1, semiannual = 2, quarterly = 4)
  * @param {number} [basis]		the type of day count basis to use.
- *  	 													0 - US (NASD) 30/360 (used by default)
- * 															1 - Actual/actual
- * 															2 - Actual/360
- * 															3 - Actual/365
- * 															4 - European 30/360
  * @throws TypeError if required arguments are missing
  * @throws TypeError if settlement or maturity cannot be converted to Date
  * @throws RangeError if frequency is not in range of [1, 2, 4]
@@ -159,7 +134,10 @@ export function coupdays(settlement, maturity, frequency, basis = 0) {
  */
 export function coupdaysnc(settlement, maturity, frequency, basis = 0) {
 	argsValidator('coupdaysnc', settlement, maturity, frequency, basis);
-	if (basis == 0) {
+	if (basis === 0) {
+		// daysBetween with basis 0 adds 1 extra day compared to Excel results for coupdaysnc
+		// (different logic may be used for US (NASD) 30/360 in coupdaysnc function
+		// we use coupdays and coupdaybs for consistency
 		return (
 			coupdays(settlement, maturity, frequency, basis) -
 			coupdaybs(settlement, maturity, frequency, basis)
@@ -176,12 +154,7 @@ export function coupdaysnc(settlement, maturity, frequency, basis = 0) {
  * @param {Date} maturity			maturity date (the date when the security expires)
  * @param {number} frequency	the number of coupon payments per year (annual = 1, semiannual = 2, quarterly = 4)
  * @param {number} [basis]		the type of day count basis to use.
- * 															0 - US (NASD) 30/360 (used by default)
- * 															1 - Actual/actual
- * 															2 - Actual/360
- * 															3 - Actual/365
- * 															4 - European 30/360
- * @return {number}
+ * @return {Date}
  * @throws TypeError if required arguments are missing
  * @throws TypeError if settlement or maturity cannot be converted to Date
  * @throws RangeError if frequency is not in range of [1, 2, 4]
@@ -218,11 +191,6 @@ export function coupncd(settlement, maturity, frequency, basis = 0) {
  * @param {Date} maturity			maturity date (the date when the security expires)
  * @param {number} frequency	the number of coupon payments per year (annual = 1, semiannual = 2, quarterly = 4)
  * @param {number} [basis]		the type of day count basis to use.
- *  * 													0 - US (NASD) 30/360 (used by default)
- * 															1 - Actual/actual
- * 															2 - Actual/360
- * 															3 - Actual/365
- * 															4 - European 30/360
  * @return {number}
  * @throws TypeError if required arguments are missing
  * @throws TypeError if settlement or maturity cannot be converted to Date
@@ -245,12 +213,7 @@ export function coupnum(settlement, maturity, frequency, basis = 0) {
  * @param {Date} maturity			maturity date (the date when the security expires)
  * @param {number} frequency	the number of coupon payments per year (annual = 1, semiannual = 2, quarterly = 4)
  * @param {number} [basis]		the type of day count basis to use.
- *  * 													0 - US (NASD) 30/360 (used by default)
- * 															1 - Actual/actual
- * 															2 - Actual/360
- * 															3 - Actual/365
- * 															4 - European 30/360
- * @return {number}
+ * @return {Date}
  * @throws TypeError if required arguments are missing
  * @throws TypeError if settlement or maturity cannot be converted to Date
  * @throws RangeError if frequency is not in range of [1, 2, 4]
