@@ -4,8 +4,9 @@ import {
 	daysBetween,
 	addDate,
 	getDaysInYear,
+	isEOM,
 } from '@/_internal/dates';
-import { splitDate } from '../_internal/dates';
+import { endOfMonth, splitDate } from '../_internal/dates';
 
 // check valid range for frequency and basis
 // TODO move validators to a separate file
@@ -84,12 +85,7 @@ const argsValidator = (
  * @throws RangeError if basis is not in range of [0, 1, 2, 3, 4]
  * @throws RangeError if settlement >= maturity
  */
-export function coupdaybs(
-	settlement,
-	maturity,
-	frequency,
-	basis = 0,
-) {
+export function coupdaybs(settlement, maturity, frequency, basis = 0) {
 	argsValidator('coupdaybs', settlement, maturity, frequency, basis);
 	let pcd = couppcd(settlement, maturity, frequency, basis);
 	return daysBetween(pcd, settlement, basis);
@@ -136,8 +132,8 @@ export function coupdays(settlement, maturity, frequency, basis = 0) {
 	argsValidator('coupdays', settlement, maturity, frequency, basis);
 	if (basis === 1) {
 		let pcd = couppcd(settlement, maturity, frequency, basis);
-		let next = addDate(pcd, 0, 12 / frequency, 0);
-		return daysBetween(pcd, next);
+		let ncd = coupncd(settlement, maturity, frequency, basis);
+		return daysBetween(pcd, ncd, basis);
 	}
 	// todo make testing more extensive - is it safe to do rounding here
 	return Math.round(getDaysInYear(0, basis) / frequency);
@@ -161,15 +157,17 @@ export function coupdays(settlement, maturity, frequency, basis = 0) {
  * @throws RangeError if settlement >= maturity
  * @return {number}
  */
-export function coupdaysnc(
-	settlement,
-	maturity,
-	frequency,
-	basis = 0,
-) {
+export function coupdaysnc(settlement, maturity, frequency, basis = 0) {
 	argsValidator('coupdaysnc', settlement, maturity, frequency, basis);
-	let ncd = coupncd(settlement, maturity, frequency, basis);
-	return daysBetween(settlement, ncd, basis);
+	if (basis == 0) {
+		return (
+			coupdays(settlement, maturity, frequency, basis) -
+			coupdaybs(settlement, maturity, frequency, basis)
+		);
+	} else {
+		let ncd = coupncd(settlement, maturity, frequency, basis);
+		return daysBetween(settlement, ncd, basis);
+	}
 }
 
 /**
@@ -194,9 +192,14 @@ export function coupncd(settlement, maturity, frequency, basis = 0) {
 	argsValidator('coupncd', settlement, maturity, frequency, basis);
 	// eslint-disable-next-line no-unused-vars
 	let [y1, m1, d1] = splitDate(maturity);
+	const eom = isEOM(maturity);
 	let d = new Date(settlement.getUTCFullYear(), m1 - 1, d1);
+	// correct overflow to next month (if any)
+	if (m1 !== d.getUTCMonth()) {
+		d.setUTCDate(0);
+	}
 	if (+settlement < +d) {
-		d = addDate(d, -1, 0, 0);
+		d = addDate(d, -1, 0, 0, eom);
 	}
 	while (+settlement >= +d) {
 		d = addDate(d, 0, 12 / frequency, 0);
@@ -257,8 +260,9 @@ export function coupnum(settlement, maturity, frequency, basis = 0) {
 export function couppcd(settlement, maturity, frequency, basis = 0) {
 	argsValidator('couppcd', settlement, maturity, frequency, basis);
 	let d = maturity;
+	const eom = isEOM(maturity);
 	while (+settlement < +d) {
-		d = addDate(d, 0, -12 / frequency, 0);
+		d = addDate(d, 0, -12 / frequency, 0, eom);
 	}
 	return d;
 }

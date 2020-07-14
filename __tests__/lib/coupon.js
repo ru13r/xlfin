@@ -90,18 +90,17 @@ const cartesian = (a, b) =>
 const zip = (a, b) => a.map((a, i) => a.concat(b[i]));
 const shortDate = d => splitDate(d).join('-');
 
-const returnsCorrectValue = suite => f => {
+const returnsCorrectValueTest = suite => f => {
 	const { settlement, maturity } = suite;
 	// frequency / basis arrays
 	const bfs = cartesian([1, 2, 4], [0, 1, 2, 3, 4]);
+	// zip arguments array with results
 	const table = zip(bfs, suite.results);
 	describe(`${suite.name} 
 	(S=${shortDate(settlement)},
 	 M=${shortDate(maturity)})`, () =>
 		it.each(table)('freq=%i, basis=%i', (freq, basis, expected) =>
-			expect(f(settlement, maturity, freq, basis)).toStrictEqual(
-				expected,
-			),
+			expect(f(settlement, maturity, freq, basis)).toStrictEqual(expected),
 		));
 };
 
@@ -133,10 +132,10 @@ args.push({
 });
 
 describe('coupdaybs', () => {
-	const func = fns.coupdaybs;
+	const func = coupdaybs;
 	applyGenericTests(func);
-	const suites = [];
-	suites.push({
+	const cases = [];
+	cases.push({
 		...args[0],
 		// prettier-ignore
 		results:
@@ -147,7 +146,7 @@ describe('coupdaybs', () => {
 			]
 	});
 
-	suites.push({
+	cases.push({
 		...args[1],
 		// prettier-ignore
 		results:
@@ -157,7 +156,7 @@ describe('coupdaybs', () => {
 				25, 25, 25, 25, 26,
 			]
 	});
-	suites.push({
+	cases.push({
 		...args[2],
 		// prettier-ignore
 		results:
@@ -167,7 +166,7 @@ describe('coupdaybs', () => {
 				25, 25, 25, 25, 26,
 			]
 	});
-	suites.push({
+	cases.push({
 		...args[3],
 		// prettier-ignore
 		results:
@@ -179,15 +178,22 @@ describe('coupdaybs', () => {
 	});
 	applyTests(
 		'Return Tests',
-		...suites.map(s => returnsCorrectValue(s)),
+		...cases.map(c => returnsCorrectValueTest(c)),
 	)(func);
 });
 
 describe('coupdays', () => {
-	const func = fns.coupdays;
+	const func = coupdays;
 	applyGenericTests(func);
-	const suites = [];
-	suites.push({
+	const cases = [];
+	/**
+	 * Excel COUPDAYS does not respect the equation
+	 * COUPDAYS = COUPDAYBS + COUPDAYSNC
+	 * when the 29 Feb is in the coupon period
+	 * (the equation shall hold)
+	 * the respective tests were adjusted
+	 */
+	cases.push({
 		...args[0],
 		// prettier-ignore
 		results:
@@ -198,7 +204,7 @@ describe('coupdays', () => {
 			]
 	});
 
-	suites.push({
+	cases.push({
 		...args[1],
 		// prettier-ignore
 		results:
@@ -208,17 +214,18 @@ describe('coupdays', () => {
 				90, 91, 90, 91, 90,
 			]
 	});
-	suites.push({
+	cases.push({
 		...args[2],
 		// prettier-ignore
+		// see the above comments
 		results:
 			[
 				360, 366, 360, 365, 360,
-				180, 182, 180, 183, 180,
-				90, 90, 90, 91, 90,
+				180, 184/**/, 180, 183, 180, 	// fixed 182 -> 184 for freq = 2, basis = 1
+				90, 92/**/, 90, 91, 90, 			// fixed 90 -> 92 for freq = 4, basis = 1
 			]
 	});
-	suites.push({
+	cases.push({
 		...args[3],
 		// prettier-ignore
 		results:
@@ -230,15 +237,15 @@ describe('coupdays', () => {
 	});
 	applyTests(
 		'Return Tests',
-		...suites.map(s => returnsCorrectValue(s)),
+		...cases.map(c => returnsCorrectValueTest(c)),
 	)(func);
 });
 
 describe('coupdaysnc', () => {
-	const func = fns.coupdaysnc;
+	const func = coupdaysnc;
 	applyGenericTests(func);
-	const suites = [];
-	suites.push({
+	const cases = [];
+	cases.push({
 		...args[0],
 		// prettier-ignore
 		results:
@@ -249,7 +256,7 @@ describe('coupdaysnc', () => {
 			]
 	});
 
-	suites.push({
+	cases.push({
 		...args[1],
 		// prettier-ignore
 		results:
@@ -259,7 +266,7 @@ describe('coupdaysnc', () => {
 				65, 66, 66, 66, 65,
 			]
 	});
-	suites.push({
+	cases.push({
 		...args[2],
 		// prettier-ignore
 		results:
@@ -269,7 +276,7 @@ describe('coupdaysnc', () => {
 				65, 67, 67, 67, 65,
 			]
 	});
-	suites.push({
+	cases.push({
 		...args[3],
 		// prettier-ignore
 		results:
@@ -281,15 +288,15 @@ describe('coupdaysnc', () => {
 	});
 	applyTests(
 		'Return Tests',
-		...suites.map(s => returnsCorrectValue(s)),
+		...cases.map(c => returnsCorrectValueTest(c)),
 	)(func);
 });
 
 describe('coupncd', () => {
-	const func = fns.coupncd;
+	const func = coupncd;
 	applyGenericTests(func);
-	const suites = [];
-	suites.push({
+	const cases = [];
+	cases.push({
 		...args[0],
 		// prettier-ignore
 		results:
@@ -300,7 +307,7 @@ describe('coupncd', () => {
 			].map(x => new Date(x))
 	});
 
-	suites.push({
+	cases.push({
 		...args[1],
 		// prettier-ignore
 		results:
@@ -310,7 +317,7 @@ describe('coupncd', () => {
 				'2012-05-30', '2012-05-30', '2012-05-30', '2012-05-30', '2012-05-30',
 			].map(x => new Date(x))
 	});
-	suites.push({
+	cases.push({
 		...args[2],
 		// prettier-ignore
 		results:
@@ -320,7 +327,7 @@ describe('coupncd', () => {
 				'2012-05-31', '2012-05-31', '2012-05-31', '2012-05-31', '2012-05-31',
 			].map(x => new Date(x))
 	});
-	suites.push({
+	cases.push({
 		...args[3],
 		// prettier-ignore
 		results:
@@ -332,66 +339,66 @@ describe('coupncd', () => {
 	});
 	applyTests(
 		'Return Tests',
-		...suites.map(s => returnsCorrectValue(s)),
+		...cases.map(c => returnsCorrectValueTest(c)),
 	)(func);
 });
 
 describe('coupnum', () => {
-	const func = fns.coupnum;
+	const func = coupnum;
 	applyGenericTests(func);
-	const suites = [];
-	suites.push({
+	const cases = [];
+	cases.push({
 		...args[0],
 		// prettier-ignore
 		results:
 			[
 				1, 1, 1, 1, 1,
 				1, 1, 1, 1, 1,
-				2, 2, 2, 2, 2
+				2, 2, 2, 2, 2,
 			]
 	});
 
-	suites.push({
+	cases.push({
 		...args[1],
 		// prettier-ignore
 		results:
 			[
 				1, 1, 1, 1, 1,
 				1, 1, 1, 1, 1,
-				2, 2, 2, 2, 2
+				2, 2, 2, 2, 2,
 			]
 	});
-	suites.push({
+	cases.push({
 		...args[2],
 		// prettier-ignore
 		results:
 			[
 				2, 2, 2, 2, 2,
 				3, 3, 3, 3, 3,
-				6, 6, 6, 6, 6
+				6, 6, 6, 6, 6,
 			]
 	});
-	suites.push({
+	cases.push({
 		...args[3],
 		// prettier-ignore
 		results:
 			[
 				2, 2, 2, 2, 2,
 				3, 3, 3, 3, 3,
-				5, 5, 5, 5, 5
+				5, 5, 5, 5, 5,
 			]
 	});
 	applyTests(
 		'Return Tests',
-		...suites.map(s => returnsCorrectValue(s)),
+		...cases.map(c => returnsCorrectValueTest(c)),
 	)(func);
 });
 
 describe('couppcd', () => {
-	const func = fns.couppcd;
+	const func = couppcd;
 	applyGenericTests(func);
-	const suites = [];
-	suites.push({
+	const cases = [];
+	cases.push({
 		...args[0],
 		// prettier-ignore
 		results:
@@ -402,7 +409,7 @@ describe('couppcd', () => {
 			].map(x => new Date(x))
 	});
 
-	suites.push({
+	cases.push({
 		...args[1],
 		// prettier-ignore
 		results:
@@ -412,7 +419,7 @@ describe('couppcd', () => {
 				'2012-02-29', '2012-02-29', '2012-02-29', '2012-02-29', '2012-02-29',
 			].map(x => new Date(x))
 	});
-	suites.push({
+	cases.push({
 		...args[2],
 		// prettier-ignore
 		results:
@@ -422,7 +429,7 @@ describe('couppcd', () => {
 				'2012-02-29', '2012-02-29', '2012-02-29', '2012-02-29', '2012-02-29',
 			].map(x => new Date(x))
 	});
-	suites.push({
+	cases.push({
 		...args[3],
 		// prettier-ignore
 		results:
@@ -434,6 +441,6 @@ describe('couppcd', () => {
 	});
 	applyTests(
 		'Return Tests',
-		...suites.map(s => returnsCorrectValue(s)),
+		...cases.map(c => returnsCorrectValueTest(c)),
 	)(func);
 });

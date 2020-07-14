@@ -22,13 +22,7 @@
  * 															4 - European 30/360
  * @return {number}
  */
-export function disc(
-	settlement,
-	maturity,
-	pr,
-	redemption,
-	basis = 0,
-) {}
+export function disc(settlement, maturity, pr, redemption, basis = 0) {}
 
 /**
  * Function intrate

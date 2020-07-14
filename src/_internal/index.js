@@ -8,10 +8,7 @@
  * @return {boolean}
  */
 exports.hasRequiredArgs = (...args) =>
-	!(
-		args !== undefined &&
-		args.some(x => x === undefined || x === null)
-	);
+	!(args !== undefined && args.some(x => x === undefined || x === null));
 
 /**
  * Tests whether or not an object is a non-empty array.

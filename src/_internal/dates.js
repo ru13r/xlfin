@@ -14,7 +14,7 @@ const getUTCZeroTimeMsecs = d =>
  *
  * @param {Number} y year
  * @param {Number} m month (from 1 to 12!!)
- * @param {Date} d date
+ * @param {Number} d date
  * @return {boolean}
  */
 export const isLastDayFeb = (y, m, d) => {
@@ -33,26 +33,29 @@ export const isLastDayFeb = (y, m, d) => {
  * @return {number}
  */
 export const daysBetween = (a, b, basis = 1) => {
-	// Discards the time
-	const utc1 = getUTCZeroTimeMsecs(a);
-	const utc2 = getUTCZeroTimeMsecs(b);
 	if (!basis30(basis)) {
+		// Discards the time
+		const utc1 = getUTCZeroTimeMsecs(a);
+		const utc2 = getUTCZeroTimeMsecs(b);
 		return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24));
 	} else {
-		let [y1, m1, d1] = splitDate(new Date(utc1));
-		let [y2, m2, d2] = splitDate(new Date(utc2));
+		let [y1, m1, d1] = splitDate(a);
+		let [y2, m2, d2] = splitDate(b);
 		if (basis === 0) {
 			// US (NASD) 30/360
-			if (isLastDayFeb(y1, m1, d1) && isLastDayFeb(y2, m2, d2)) {
-				d2 = 30;
-			}
-			if (isLastDayFeb(y1, m1, d1)) {
+			// https://docs.microsoft.com/en-us/openspecs/office_standards/ms-oi29500/03a8b66d-ce9d-43d8-a751-17c0b018f0c3
+			if (d1 === 31 && d2 === 31) {
 				d1 = 30;
-			}
-			if (d1 >= 30 && d2 === 31) {
 				d2 = 30;
-			}
-			if (d1 === 31) {
+			} else if (d1 === 31) {
+				d1 = 30;
+			} else if (d1 === 30 && d2 === 31) {
+				// d1 remains unchanged
+				d2 = 30;
+			} else if (isLastDayFeb(y1, m1, d1) && isLastDayFeb(y2, m2, d2)) {
+				d1 = 30;
+				d2 = 30;
+			} else if (isLastDayFeb(y1, m1, d1)) {
 				d1 = 30;
 			}
 		}
@@ -84,6 +87,13 @@ export const endOfMonth = d => {
 	nd.setUTCDate(0);
 	return nd;
 };
+
+/**
+ * Checks if date is end of month date
+ * @param {Date} d
+ * @return {boolean}
+ */
+export const isEOM = d => daysBetween(d, endOfMonth(d)) === 0;
 
 /**
  * Returns beginning of the month Date, given a Date
@@ -120,7 +130,7 @@ export const getDaysInYear = (y, basis = 1) => {
 
 /**
  * Splits the date object into array of [year, month, day].
- * Month is returned in range from 1 to 12
+ * Month is numbered from 1 to 12
  * @param {Date} date
  * @return {(number)[]} [year, month, day]
  */
@@ -135,9 +145,10 @@ export const splitDate = date => {
  * @param {number} y years
  * @param {number} m months
  * @param {number} d days
- * @return {number}
+ * @param {boolean} isEOM (optional) respect end of month e.g 29 Feb + 1 month = 31 March
+ * @return {Date}
  */
-export const addDate = (date, y, m, d) => {
+export const addDate = (date, y, m, d, isEOM = false) => {
 	let nd = new Date(getUTCZeroTimeMsecs(date));
 	let [year, month, day] = splitDate(nd);
 	// Date object months start with 0
@@ -153,8 +164,8 @@ export const addDate = (date, y, m, d) => {
 	if (nd.getUTCMonth() !== month) {
 		nd.setUTCDate(0);
 	}
-	// if the date was end of month (e. g. 29 Feb)
-	// the result shall be end of month also (including months with more days than original)
 	nd.setUTCDate(nd.getUTCDate() + d);
-	return nd;
+	// if isEOM then if the date was end of month (e. g. 29 Feb)
+	// the result shall be end of month also (including months with more days than original)
+	return !isEOM ? nd : endOfMonth(nd);
 };

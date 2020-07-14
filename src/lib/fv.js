@@ -13,9 +13,7 @@
  * @return {number}
  */
 export function fvschedule(principal, schedule) {
-	return (
-		principal * schedule.reduce((acc, rate) => acc * (1 + rate), 1)
-	);
+	return principal * schedule.reduce((acc, rate) => acc * (1 + rate), 1);
 }
 
 /**

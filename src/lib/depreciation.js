@@ -134,9 +134,7 @@ export function sln(cost, salvage, life) {
  * @return {number}
  */
 export function syd(cost, salvage, life, per) {
-	return (
-		((cost - salvage) * (life - per + 1) * 2) / (life * (life + 1))
-	);
+	return ((cost - salvage) * (life - per + 1) * 2) / (life * (life + 1));
 }
 
 // Returns the depreciation of an asset for a specified or partial period by using a declining balance method

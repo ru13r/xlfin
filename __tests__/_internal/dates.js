@@ -4,6 +4,7 @@ import {
 	begOfMonth,
 	daysBetween,
 	endOfMonth,
+	isEOM,
 	getDaysInYear,
 	isLeapYear,
 	isLastDayFeb,
@@ -13,20 +14,12 @@ describe('addDate', () => {
 	it('returns a correct value', () => {
 		const d = new Date('2017-01-01');
 		expect(addDate(d, 1, 0, 0)).toStrictEqual(new Date('2018-01-01'));
-		expect(addDate(d, -1, 0, 0)).toStrictEqual(
-			new Date('2016-01-01'),
-		);
+		expect(addDate(d, -1, 0, 0)).toStrictEqual(new Date('2016-01-01'));
 		expect(addDate(d, 0, 1, 0)).toStrictEqual(new Date('2017-02-01'));
-		expect(addDate(d, 0, -1, 0)).toStrictEqual(
-			new Date('2016-12-01'),
-		);
+		expect(addDate(d, 0, -1, 0)).toStrictEqual(new Date('2016-12-01'));
 		expect(addDate(d, 0, 0, 1)).toStrictEqual(new Date('2017-01-02'));
-		expect(addDate(d, 0, 0, -1)).toStrictEqual(
-			new Date('2016-12-31'),
-		);
-		expect(addDate(d, 0, 0, 31)).toStrictEqual(
-			new Date('2017-02-01'),
-		);
+		expect(addDate(d, 0, 0, -1)).toStrictEqual(new Date('2016-12-31'));
+		expect(addDate(d, 0, 0, 31)).toStrictEqual(new Date('2017-02-01'));
 		// months test with variable number of days
 		expect(addDate(new Date(2016, 1, 29), 0, 12, 0)).toStrictEqual(
 			new Date('2017-02-28'),
@@ -43,8 +36,23 @@ describe('addDate', () => {
 		expect(addDate(new Date(2017, 0, 1), 0, -1, 0)).toStrictEqual(
 			new Date('2016-12-01'),
 		);
+		expect(addDate(new Date(2012, 1, 29), -1, 0, 0)).toStrictEqual(
+			new Date('2011-02-28'),
+		);
 		expect(addDate(new Date(2017, 0, 31), 0, -2, 0)).toStrictEqual(
 			new Date('2016-11-30'),
+		);
+		expect(addDate(new Date(2012, 1, 29), 0, 1, 0)).toStrictEqual(
+			new Date('2012-03-29'),
+		);
+		expect(addDate(new Date(2012, 1, 29), 0, 1, 0, true)).toStrictEqual(
+			new Date('2012-03-31'),
+		);
+		expect(addDate(new Date(2012, 1, 29), 0, -1, 0)).toStrictEqual(
+			new Date('2012-01-29'),
+		);
+		expect(addDate(new Date(2012, 1, 29), 0, -1, 0, true)).toStrictEqual(
+			new Date('2012-01-31'),
 		);
 		expect(addDate(new Date(2016, 11, 31), 0, 2, 0)).toStrictEqual(
 			new Date('2017-02-28'),
@@ -116,6 +124,16 @@ describe('endOfMonth', () => {
 		expect(endOfMonth(new Date('2016-02-29'))).toStrictEqual(
 			new Date('2016-02-29'),
 		);
+	});
+});
+
+describe('isEOM', () => {
+	it('returns a correct value', () => {
+		const f = isEOM;
+		expect(f(new Date('2012-02-29'))).toBe(true);
+		expect(f(new Date('2012-02-28'))).toBe(false);
+		expect(f(new Date('2012-01-29'))).toBe(false);
+		expect(f(new Date('2012-01-31'))).toBe(true);
 	});
 });
 

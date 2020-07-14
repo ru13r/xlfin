@@ -28,3 +28,10 @@ Also known as “30E/360”.
 1. If @d2 is 31, set @d2 to 30.
 
 The Excel equivalent of this is 360*YEARFRAC(fromDate; toDate; 4).
+
+CoupDays
+The Excel algorithm seems wrong in that it doesn't respect the following:
+
+coupDays = coupDaysBS + coupDaysNC.
+This equality should stand. The result differs from Excel by +/- one or two days when the date spans a leap year.
+https://github.com/fsprojects/ExcelFinancialFunctions
