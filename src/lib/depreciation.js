@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * Function AMORDEGRC
+ * Function amordegrc
  * Returns the depreciation for each accounting period.
  * This function is provided for the French accounting system.
  * If an asset is purchased in the middle of the accounting period,
  * the prorated depreciation is taken into account.
- * The function is similar to AMORLINC,
+ * The function is similar to amorlinc,
  * except that a depreciation coefficient is applied in the calculation
  * depending on the life of the assets.
  *
@@ -31,7 +31,7 @@
  *																	4 - 360 days in a year (European method)
  * @return {number}
  */
-exports.AMORDEGRC = function (
+export function amordegrc(
 	cost,
 	date_purchased,
 	first_period,
@@ -39,10 +39,10 @@ exports.AMORDEGRC = function (
 	period,
 	rate,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function AMORLINC
+ * Function amorlinc
  * Returns the depreciation for each accounting period.
  * This function is provided for the French accounting system.
  * If an asset is purchased in the middle of the accounting period,
@@ -61,7 +61,7 @@ exports.AMORDEGRC = function (
  *																	4 - 360 days in a year (European method)
  * @return {number}
  */
-exports.AMORLINC = function (
+export function amorlinc(
 	cost,
 	date_purchased,
 	first_period,
@@ -69,10 +69,10 @@ exports.AMORLINC = function (
 	period,
 	rate,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function DB
+ * Function db
  * Returns the depreciation of an asset for a specified period by using the fixed-declining balance method
  *
  * Assert all arguments are positive.
@@ -85,13 +85,13 @@ exports.AMORLINC = function (
  * @param {number} [month]	The number of months in the first year. If month is omitted, it is assumed to be 12.
  * @return {number}
  */
-exports.DB = function (cost, salvage, life, period, month = 12) {};
+export function db(cost, salvage, life, period, month = 12) {}
 
 /**
- * Function DDB
+ * Function ddb
  * Returns the depreciation of an asset for a specified period by using the double-declining balance method
  * or some other method that you specify.
- * Use the VDB function if you want to switch to the straight-line depreciation method
+ * Use the vdb function if you want to switch to the straight-line depreciation method
  * when depreciation is greater than the declining balance calculation.
  *
  * Assert all arguments are positive.
@@ -104,10 +104,10 @@ exports.DB = function (cost, salvage, life, period, month = 12) {};
  * @param {number} [factor]	The rate at which the balance declines. If factor is omitted, it is assumed to be 2
  * @return {number}
  */
-exports.DDB = function (cost, salvage, life, period, factor = 2) {};
+export function ddb(cost, salvage, life, period, factor = 2) {}
 
 /**
- * Function SLN
+ * Function sln
  * Returns the straight-line depreciation of an asset for one period
  *
  * Assert all arguments are positive.
@@ -117,12 +117,12 @@ exports.DDB = function (cost, salvage, life, period, factor = 2) {};
  * @param {number} life			The number of periods over which the asset is being depreciated (useful life).
  * @return {number}
  */
-exports.SLN = function (cost, salvage, life) {
+export function sln(cost, salvage, life) {
 	return (cost - salvage) / life;
-};
+}
 
 /**
- * Function SYD
+ * Function syd
  * Returns the sum-of-years' digits depreciation of an asset for a specified period
  *
  * Assert all arguments are positive.
@@ -133,19 +133,19 @@ exports.SLN = function (cost, salvage, life) {
  * @param {number} per			The period and must use the same units as life.
  * @return {number}
  */
-exports.SYD = function (cost, salvage, life, per) {
+export function syd(cost, salvage, life, per) {
 	return (
 		((cost - salvage) * (life - per + 1) * 2) / (life * (life + 1))
 	);
-};
+}
 
 // Returns the depreciation of an asset for a specified or partial period by using a declining balance method
 
 /**
- * Function VDB
+ * Function vdb
  * Returns the depreciation of an asset for any period you specify, including partial periods,
  * using the double-declining balance method or some other method you specify.
- * VDB stands for variable declining balance.
+ * vdb stands for variable declining balance.
  *
  * Assert all numeric arguments are positive.
  *
@@ -162,7 +162,7 @@ exports.SYD = function (cost, salvage, life, per) {
  * 															True - do not switch, False (default) - switch
  * @return {number}
  */
-exports.VDB = function (
+export function vdb(
 	cost,
 	salvage,
 	life,
@@ -170,4 +170,4 @@ exports.VDB = function (
 	end_period,
 	factor = 2,
 	no_switch = false,
-) {};
+) {}

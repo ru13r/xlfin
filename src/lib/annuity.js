@@ -1,11 +1,12 @@
 'use strict';
+
 /**
- * Function CUMIPMT
+ * Function cumipmt
  * Returns the cumulative interest paid between two periods
  *
- * If rate ≤ 0, nper ≤ 0, or pv ≤ 0, CUMIPMT returns the #NUM! error value.
- * If start_period < 1, end_period < 1, or start_period > end_period, CUMIPMT returns the #NUM! error value.
- * If type is any number other than 0 or 1, CUMIPMT returns the #NUM! error value.
+ * If rate ≤ 0, nper ≤ 0, or pv ≤ 0, cumipmt returns the #NUM! error value.
+ * If start_period < 1, end_period < 1, or start_period > end_period, cumipmt returns the #NUM! error value.
+ * If type is any number other than 0 or 1, cumipmt returns the #NUM! error value.
  *
  * @param {number} rate					The interest rate per period.
  * @param {number} nper					The total number of payment periods in an annuity.
@@ -19,20 +20,20 @@
  * 															If type is omitted, it is assumed to be 0. (TODO in Excel is required - why?)
  * @return {number}
  */
-exports.CUMIPMT = function (
+export function cumipmt(
 	rate,
 	nper,
 	pv,
 	start_period,
 	end_period,
 	type = 0,
-) {};
+) {}
 
 // Returns the cumulative principal paid on a loan between two periods
-exports.CUMPRINC = function () {};
+export function cumprinc() {}
 
 /**
- * Function FV
+ * Function fv
  * Returns the future value of an investment.
  *
  * @param {number} rate 	The interest rate per period.
@@ -49,10 +50,10 @@ exports.CUMPRINC = function () {};
  * 												If type is omitted, it is assumed to be 0.
  * @return {number}
  */
-exports.FV = function (rate, nper, pmt, pv = 0, type = 0) {};
+export function fv(rate, nper, pmt, pv = 0, type = 0) {}
 
 /**
- * Function IPMT
+ * Function ipmt
  * Returns the interest payment for an investment for a given period.
  *
  * @param {number} rate		The interest rate per period.
@@ -67,10 +68,10 @@ exports.FV = function (rate, nper, pmt, pv = 0, type = 0) {};
  * 												If type is omitted, it is assumed to be 0.
  * @return {number}
  */
-exports.IPMT = function (rate, per, nper, pv, fv = 0, type = 0) {};
+export function ipmt(rate, per, nper, pv, fv = 0, type = 0) {}
 
 /**
- * Function ISPMT
+ * Function ispmt
  * Calculates the interest paid during a specific period of an investment.
  *
  * @param {number} rate The interest rate for the investment.
@@ -79,10 +80,10 @@ exports.IPMT = function (rate, per, nper, pv, fv = 0, type = 0) {};
  * @param {number} pv 	The present value of the investment. For a loan, Pv is the loan amount.
  * @return {number}
  */
-exports.ISPMT = function (rate, per, nper, pv) {};
+export function ispmt(rate, per, nper, pv) {}
 
 /**
- * Function NPER
+ * Function nper
  * Returns the number of periods for an investment based on
  * periodic, constant payments and a constant interest rate.
  *
@@ -98,10 +99,10 @@ exports.ISPMT = function (rate, per, nper, pv) {};
  * 												If type is omitted, it is assumed to be 0.
  * @return {number}
  */
-exports.NPER = function (rate, pmt, pv, fv = 0, type = 0) {};
+export function nper(rate, pmt, pv, fv = 0, type = 0) {}
 
 /**
- * Function PMT
+ * Function pmt
  * Returns the periodic payment for an annuity
 
  * @param {number} rate		The interest rate per period.
@@ -116,10 +117,10 @@ exports.NPER = function (rate, pmt, pv, fv = 0, type = 0) {};
  * 												If type is omitted, it is assumed to be 0.
  * @return {number}
  */
-exports.PMT = function (rate, nper, pv, fv = 0, type = 0) {};
+export function pmt(rate, nper, pv, fv = 0, type = 0) {}
 
 /**
- * Function PPMT
+ * Function ppmt
  * Returns the payment on the principal for a given period for an investment
  * based on periodic, constant payments and a constant interest rate.
  *
@@ -141,10 +142,10 @@ exports.PMT = function (rate, nper, pv, fv = 0, type = 0) {};
  * 												If type is omitted, it is assumed to be 0.
  * @return {number}
  */
-exports.PPMT = function (rate, per, nper, pv, fv = 0, type = 0) {};
+export function ppmt(rate, per, nper, pv, fv = 0, type = 0) {}
 
 /**
- * Function PV
+ * Function pv
  * Returns the present value of an investment
  *
  * Make sure that you are consistent about the units you use for specifying rate and nper.
@@ -163,17 +164,17 @@ exports.PPMT = function (rate, per, nper, pv, fv = 0, type = 0) {};
  * 												If type is omitted, it is assumed to be 0.
  * @return {number}
  */
-exports.PV = function (rate, nper, pmt, fv = 0, type = 0) {};
+export function pv(rate, nper, pmt, fv = 0, type = 0) {}
 
 /**
- * Function RATE
+ * Function rate
  * Returns the interest rate per period of an annuity
  *
  * TODO Fix comment after the implemetation of root search algorithm
  * TODO make a precision and maxIterations setters in main object
- * RATE is calculated by iteration and can have zero or more solutions.
- * If the successive results of RATE do not converge to within 0.0000001 after 20 iterations,
- * RATE returns the #NUM! error value.
+ * rate is calculated by iteration and can have zero or more solutions.
+ * If the successive results of rate do not converge to within 0.0000001 after 20 iterations,
+ * rate returns the #NUM! error value.
  *
  * @param {number} nper 		The total number of payments in an annuity.
  * @param {number} pmt			The payment made each period; it cannot change over the life of the annuity.
@@ -188,11 +189,4 @@ exports.PV = function (rate, nper, pmt, fv = 0, type = 0) {};
  * 													If you omit guess, it is assumed to be 10 percent.
  * @return {number}
  */
-exports.RATE = function (
-	nper,
-	pmt,
-	pv,
-	fv = 0,
-	type = 0,
-	guess = 0.1,
-) {};
+export function rate(nper, pmt, pv, fv = 0, type = 0, guess = 0.1) {}

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Function ACCRINTM
+ * Function accrintm
  * Returns the accrued interest for a security that pays interest at maturity
  *
  * Issue, settlement and basis are truncated to integers.
@@ -22,16 +22,10 @@
  * 																4 - European 30/360
  * @return {number}
  */
-exports.ACCRINTM = function (
-	issue,
-	settlement,
-	rate,
-	par,
-	basis = 0,
-) {};
+export function accrintm(issue, settlement, rate, par, basis = 0) {}
 
 /**
- * Function PRICEMAT
+ * Function pricemat
  * Returns the price per $100 face value of a security that pays interest at maturity
  *
  * Issue, settlement, maturity and basis are truncated to integers.
@@ -53,17 +47,17 @@ exports.ACCRINTM = function (
  * 														4 - European 30/360
  * @return {number}
  */
-exports.PRICEMAT = function (
+export function pricemat(
 	settlement,
 	maturity,
 	issue,
 	rate,
 	yld,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function YIELDMAT
+ * Function yieldmat
  * Returns the annual yield of a security that pays interest at maturity
  *
  * Issue, settlement, maturity and basis are truncated to integers.
@@ -85,17 +79,17 @@ exports.PRICEMAT = function (
  * 														4 - European 30/360
  * @return {number}
  */
-exports.YIELDMAT = function (
+export function yieldmat(
 	settlement,
 	maturity,
 	issue,
 	rate,
 	pr,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function ACCRINT
+ * Function accrint
  * Returns the accrued interest for a security that pays periodic interest
  *
  * Issue, first_interest, settlement, frequency, and basis are truncated to integers.
@@ -124,7 +118,7 @@ exports.YIELDMAT = function (
  * 																		If you do not enter the argument, it defaults to TRUE.
  * @return {number}
  */
-exports.ACCRINT = function (
+export function accrint(
 	issue,
 	first_interest,
 	settlement,
@@ -135,11 +129,11 @@ exports.ACCRINT = function (
 	calc_method = true,
 ) {
 	if (par === undefined) par = 1000;
-};
+}
 
 //
 /**
- * Function PRICE
+ * Function price
  * Returns the price per $100 face value of a security that pays periodic interest
  *
  * Settlement, maturity, and basis are truncated to integers.
@@ -164,7 +158,7 @@ exports.ACCRINT = function (
  * 																4 - European 30/360
  * @return {number}
  */
-exports.PRICE = function (
+export function price(
 	settlement,
 	maturity,
 	rate,
@@ -172,10 +166,10 @@ exports.PRICE = function (
 	redemption,
 	frequency,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function YIELD
+ * Function yield
  * Returns the yield on a security that pays periodic interest
  *
  * Settlement, maturity, and basis are truncated to integers.
@@ -200,7 +194,7 @@ exports.PRICE = function (
  * 															4 - European 30/360
  * @return {number}
  */
-exports.YIELD = function (
+export function YIELD(
 	settlement,
 	maturity,
 	rate,
@@ -208,10 +202,10 @@ exports.YIELD = function (
 	redemption,
 	frequency,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function ODDFPRICE
+ * Function oddfprice
  * Returns the price per $100 face value of a security with an odd first period
  *
  * Settlement, maturity, first_coupon and basis are truncated to integers.
@@ -238,7 +232,7 @@ exports.YIELD = function (
  * 																4 - European 30/360
  * @return {number}
  */
-exports.ODDFPRICE = function (
+export function oddfprice(
 	settlement,
 	maturity,
 	issue,
@@ -248,10 +242,10 @@ exports.ODDFPRICE = function (
 	redemption,
 	frequency,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function ODDFYIELD
+ * Function oddfyield
  * Returns the yield of a security with an odd first period
  *
  * Settlement, maturity, first_coupon and basis are truncated to integers.
@@ -278,7 +272,7 @@ exports.ODDFPRICE = function (
  * 																4 - European 30/360
  * @return {number}
  */
-exports.ODDFYIELD = function (
+export function oddfyield(
 	settlement,
 	maturity,
 	issue,
@@ -288,11 +282,11 @@ exports.ODDFYIELD = function (
 	redemption,
 	frequency,
 	basis = 0,
-) {};
+) {}
 
 // Returns the price per $100 face value of a security with an odd last period
 /**
- * Function ODDLPRICE
+ * Function oddlprice
  * Returns the price per $100 face value of a security with an odd first period
  *
  * Settlement, maturity, first_coupon and basis are truncated to integers.
@@ -318,7 +312,7 @@ exports.ODDFYIELD = function (
  * 																4 - European 30/360
  * @return {number}
  */
-exports.ODDLPRICE = function (
+export function oddlprice(
 	settlement,
 	maturity,
 	last_interest,
@@ -327,11 +321,11 @@ exports.ODDLPRICE = function (
 	redemption,
 	frequency,
 	basis = 0,
-) {};
+) {}
 
 // Returns the yield of a security with an odd last period
 /**
- * Function ODDLYIELD
+ * Function oddlyield
  * Returns the yield of a security with an odd first period
  *
  * Settlement, maturity, first_coupon and basis are truncated to integers.
@@ -357,7 +351,7 @@ exports.ODDLPRICE = function (
  * 																4 - European 30/360
  * @return {number}
  */
-exports.ODDLYIELD = function (
+export function oddlyield(
 	settlement,
 	maturity,
 	last_interest,
@@ -366,10 +360,10 @@ exports.ODDLYIELD = function (
 	redemption,
 	frequency,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function DURATION
+ * Function duration
  * returns the Macauley duration for an assumed par value of $100.
  * Duration is defined as the weighted average of the present value of cash flows,
  * and is used as a measure of a bond price's response to changes in yield.
@@ -394,17 +388,17 @@ exports.ODDLYIELD = function (
  * 															4 - European 30/360
  * @return {number}
  */
-exports.DURATION = function (
+export function duration(
 	settlement,
 	maturity,
 	coupon,
 	yld,
 	frequency,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function MDURATION
+ * Function mduration
  * Returns the modified Macauley duration for a security with an assumed par value of $100.
  *
  * Settlement, maturity and basis are truncated to integers.
@@ -427,11 +421,11 @@ exports.DURATION = function (
  * 															4 - European 30/360
  * @return {number}
  */
-exports.MDURATION = function (
+export function mduration(
 	settlement,
 	maturity,
 	coupon,
 	yld,
 	frequency,
 	basis = 0,
-) {};
+) {}

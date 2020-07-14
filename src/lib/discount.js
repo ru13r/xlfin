@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Function DISC
+ * Function disc
  * Returns the discount rate for a security
  *
  * Settlement, maturity, and basis are truncated to integers.
@@ -22,16 +22,16 @@
  * 															4 - European 30/360
  * @return {number}
  */
-exports.DISC = function (
+export function disc(
 	settlement,
 	maturity,
 	pr,
 	redemption,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function INTRATE
+ * Function intrate
  * Returns the interest rate for a fully invested security
  *
  * Settlement, maturity, and basis are truncated to integers.
@@ -52,18 +52,18 @@ exports.DISC = function (
  * 															4 - European 30/360
  * @return {number}
  */
-exports.INTRATE = function (
+export function intrate(
 	settlement,
 	maturity,
 	investment,
 	redemption,
 	basis = 0,
-) {};
+) {}
 
 //
 
 /**
- * Function PRICEDISC
+ * Function pricedisc
  * Returns the price per $100 face value of a discounted security
  *
  * Settlement, maturity, and basis are truncated to integers.
@@ -84,16 +84,16 @@ exports.INTRATE = function (
  * 														4 - European 30/360
  * @return {number}
  */
-exports.PRICEDISC = function (
+export function pricedisc(
 	settlement,
 	maturity,
 	discount,
 	redemption,
 	basis = 0,
-) {};
+) {}
 
 /**
- * Function RECEIVED
+ * Function received
  * Returns the amount received at maturity for a fully invested security
  *
  * Settlement, maturity, and basis are truncated to integers.
@@ -114,17 +114,17 @@ exports.PRICEDISC = function (
  * 														4 - European 30/360
  * @return {number}
  */
-exports.RECEIVED = function (
+export function received(
 	settlement,
 	maturity,
 	investment,
 	discount,
 	basis = 0,
-) {};
+) {}
 
 //
 /**
- * Function YIELDDISC
+ * Function yielddisc
  * Returns the annual yield for a discounted security; for example, a Treasury bill
  *
  * Settlement, maturity, and basis are truncated to integers.
@@ -145,10 +145,10 @@ exports.RECEIVED = function (
  * 														4 - European 30/360
  * @return {number}
  */
-exports.YIELDDISC = function (
+export function yielddisc(
 	settlement,
 	maturity,
 	pr,
 	redemption,
 	basis = 0,
-) {};
+) {}

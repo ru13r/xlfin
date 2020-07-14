@@ -1,7 +1,8 @@
 'use strict';
-import { diffInDays } from '@/common';
+import { daysBetween } from '@/_internal/dates';
+
 /**
- * Function TBILLEQ
+ * Function tbilleq
  * Returns the bond-equivalent yield for a Treasury bill
  *
  * Settlement and maturity are truncated to integers.
@@ -14,13 +15,13 @@ import { diffInDays } from '@/common';
  * @param {number} discount	the security's discount rate
  * @return {number}
  */
-exports.TBILLEQ = function (settlement, maturity, discount) {
-	const dsm = diffInDays(settlement, maturity);
+export function tbilleq(settlement, maturity, discount) {
+	const dsm = daysBetween(settlement, maturity);
 	return (365 * discount) / (360 - discount * dsm);
-};
+}
 
 /**
- * Function TBILLPRICE
+ * Function tbillprice
  * Returns the price per $100 face value for a Treasury bill
  *
  * Settlement and maturity are truncated to integers.
@@ -33,13 +34,13 @@ exports.TBILLEQ = function (settlement, maturity, discount) {
  * @param {number} discount	the security's discount rate
  * @return {number}
  */
-exports.TBILLPRICE = function (settlement, maturity, discount) {
-	const dsm = diffInDays(settlement, maturity);
+export function tbillprice(settlement, maturity, discount) {
+	const dsm = daysBetween(settlement, maturity);
 	return 100 * (1 - (discount * dsm) / 360);
-};
+}
 
 /**
- * Function TBILLYIELD
+ * Function tbillyield
  * Returns the yield for a Treasury bill
  *
  * Settlement and maturity are truncated to integers.
@@ -52,7 +53,7 @@ exports.TBILLPRICE = function (settlement, maturity, discount) {
  * @param {number} pr				price per $100 face value (par)
  * @return {number}
  */
-exports.TBILLYIELD = function (settlement, maturity, pr) {
-	const dsm = diffInDays(settlement, maturity);
+export function tbillyield(settlement, maturity, pr) {
+	const dsm = daysBetween(settlement, maturity);
 	return ((100 - pr) / pr) * (360 / dsm);
-};
+}
